@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using RestSharp;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace Backend.API.Controllers
 {
@@ -32,8 +31,9 @@ namespace Backend.API.Controllers
             var request = new RestRequest("/accounting/account/LJArJ4/invoices/invoices", Method.Get);
             request.AddHeader("Authorization", authorizationHeader);
             RestResponse response = await client.ExecuteAsync(request);
-            var invoices = JsonSerializer.Deserialize<InvoiceListDto>(response.Content);
-            return Ok(invoices);
+            if (response.IsSuccessful)
+                return Ok(JsonSerializer.Deserialize<InvoiceListDto>(response.Content));
+            else throw response.ErrorException;
         }
     }
 }

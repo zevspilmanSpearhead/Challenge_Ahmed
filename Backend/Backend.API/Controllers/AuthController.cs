@@ -29,16 +29,14 @@ namespace Backend.API.Controllers
 
             try
             {
-                // Exchange the authorization code for an access token (use your own logic here)
+                // Exchange the authorization code for an access token
                 var token = await ExchangeAuthorizationCodeForAccessToken(code);
-                //string accessToken = Test(code).Result;
 
                 // Redirect the user to the frontend dashboard route with the access token as a query parameter
                 return Redirect($"http://localhost:5173/dashboard?access_token={token.AccessToken}");
             }
             catch (Exception ex)
             {
-                // Handle errors appropriately
                 return StatusCode(500, $"Error exchanging authorization code for access token: {ex.Message}");
             }
         }
