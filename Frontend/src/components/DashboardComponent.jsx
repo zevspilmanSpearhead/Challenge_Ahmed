@@ -8,14 +8,11 @@ const DashboardComponent = () => {
     // Extract the access token from the URL query parameters
     const urlParams = new URLSearchParams(window.location.search);
     const accessToken = urlParams.get("access_token");
-    console.log(Object.keys(invoices).length);
-    console.log("invoices", invoices);
     if (accessToken) {
       const fetchInvoices = async () => {
         try {
           const { response } = await apiService.getInvoices(accessToken);
           console.log("response", response);
-          console.log("accessToken", accessToken);
           setInvoices(response?.result?.invoice);
         } catch (error) {
           console.log(error);
@@ -27,7 +24,6 @@ const DashboardComponent = () => {
       console.error("Access token not found in the URL");
     }
   }, []);
-  console.log("invoices", invoices);
   return (
     <div>
       <h1>Dashboard</h1>
