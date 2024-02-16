@@ -28,11 +28,21 @@ namespace Backend.API.Controllers
                 MaxTimeout = -1,
             };
             var client = new RestClient(options);
-            var request = new RestRequest("/accounting/account/LJArJ4/invoices/invoices", Method.Get);
+            var request = new RestRequest("/accounting/account/5kWxoJ/invoices/invoices", Method.Get);
             request.AddHeader("Authorization", authorizationHeader);
             RestResponse response = await client.ExecuteAsync(request);
             if (response.IsSuccessful)
-                return Ok(JsonSerializer.Deserialize<InvoiceListDto>(response.Content));
+            {
+                var result = JsonSerializer.Deserialize<InvoiceListDto>(response.Content);
+                return Ok(
+                    result.response.result.invoices.Select(invoice => new
+                    {
+                        Amount = invoice.amount.amount,
+                        CreatedAt = invoice.created_at,
+                        V3Status = invoice.v3_status,
+                    })
+                );
+            }
             else throw response.ErrorException;
         }
     }

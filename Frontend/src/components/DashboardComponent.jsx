@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import apiService from "../services/apiService";
+import Table from "./Table";
 
 const DashboardComponent = () => {
   const [invoices, setInvoices] = useState([]);
@@ -11,9 +12,9 @@ const DashboardComponent = () => {
     if (accessToken) {
       const fetchInvoices = async () => {
         try {
-          const { response } = await apiService.getInvoices(accessToken);
+          const response = await apiService.getInvoices(accessToken);
           console.log("response", response);
-          setInvoices(response?.result?.invoice);
+          setInvoices(response);
         } catch (error) {
           console.log(error);
         }
@@ -25,28 +26,14 @@ const DashboardComponent = () => {
     }
   }, []);
   return (
-    <div>
-      <h1>Dashboard</h1>
-      <table className="table-auto">
-        <thead>
-          <tr>
-            <th className="px-4 py-2">Column 1</th>
-            <th className="px-4 py-2">Column 2</th>
-            {/* Add more columns as needed */}
-          </tr>
-        </thead>
-        <tbody>
-          {invoices &&
-            invoices.map((item) => (
-              <tr key={item.id}>
-                <td className="border px-4 py-2">{item.column1}</td>
-                <td className="border px-4 py-2">{item.column2}</td>
-                {/* Add more cells as needed */}
-              </tr>
-            ))}
-        </tbody>
-      </table>
-    </div>
+    <>
+      <div className="flex flex-col items-center justify-center min-h-screen">
+        <h1 className="text-4xl font-bold mb-8 text-gray-800">Dashboard</h1>
+        <div className="bg-gray-100 p-8 rounded-md shadow-md">
+          {invoices.length > 0 && <Table data={invoices} />}
+        </div>
+      </div>
+    </>
   );
 };
 
